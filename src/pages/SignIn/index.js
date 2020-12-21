@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Button, Gap, Header, TextInput} from '../../component';
@@ -12,7 +13,14 @@ const SignIn = ({navigation}) => {
   });
 
   const onSubmit = () => {
-    console.warn('form : ', form);
+    console.log('form : ', form);
+    Axios.post('http://10.0.2.2:8000/api/login', form)
+      .then((res) => {
+        console.log('success', res);
+      })
+      .catch((err) => {
+        console.log('error', err);
+      });
   };
   return (
     <View style={styles.page}>
