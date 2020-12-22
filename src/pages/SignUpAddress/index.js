@@ -3,6 +3,7 @@ import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Header, TextInput, Gap, Button, Select} from '../../component';
+import {setLoading, signUpAction} from '../../redux/action';
 import {useForm, showMessage} from '../../utils';
 
 const SignUpAddress = ({navigation}) => {
@@ -23,35 +24,8 @@ const SignUpAddress = ({navigation}) => {
       ...registerReducer,
     };
     console.log('data Register: ', data);
-    dispatch({type: 'SET_LOADING', value: true});
-    Axios.post('http://10.0.2.2:8000/api/register', data)
-      .then((res) => {
-        console.log('data success: ', res.data);
-        if (photoReducer.isUploadPhoto) {
-          const photoForUpload = new FormData();
-          photoForUpload.append('file', photoReducer);
-          Axios.post('http://10.0.2.2:8000/api/user/photo', photoForUpload, {
-            headers: {
-              Authorization: `${res.data.data.token_type} ${res.data.data.access_token}`,
-              'content-Type': 'multipart/form-data',
-            },
-          })
-            .then((resUpload) => {
-              console.log('success upload: ', resUpload);
-            })
-            .catch((err) => {
-              showMessage('Upload Photo tidak berhasil', err);
-            });
-        }
-
-        dispatch({type: 'SET_LOADING', value: false});
-        showMessage('Register Success', 'success');
-        navigation.replace('SuccessSignUp');
-      })
-      .catch((err) => {
-        dispatch({type: 'SET_LOADING', value: false});
-        showMessage(err?.response?.data?.data?.message);
-      });
+    dispatch(setLoading(true));
+    dispatch(signUpAction(data, photoReducer, navigation));
   };
 
   return (
