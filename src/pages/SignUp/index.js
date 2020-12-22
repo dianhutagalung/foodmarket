@@ -1,34 +1,81 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Header, TextInput, Gap, Button} from '../../component';
+import {useSelector, useDispatch} from 'react-redux';
+import {useForm} from '../../utils';
+// import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+
+// const addPhoto = () => {
+//   launchImageLibrary({}, (response) => {
+//     if (response.didCancel || response.errorMessage) {
+//       console.log('Anda tidak memilih photo');
+//     } else {
+//       console.log('Anda tidak memilih photo');
+//     }
+//   });
+// };
 
 const SignUp = ({navigation}) => {
+  const [form, setForm] = useForm({
+    name: '',
+    email: '',
+    password: '',
+  });
+
+  const dispatch = useDispatch();
+
+  const onSubmit = () => {
+    console.log('form: ', form);
+    dispatch({type: 'SET_REGISTER', value: form});
+    navigation.navigate('SignUpAddress');
+  };
+
   return (
-    <View style={styles.page}>
-      <Header title="Sign Up" subTitle="Register and eat" onBack={() => {}} />
-      <View style={styles.container}>
-        <View style={styles.photo}>
-          <View style={styles.borderPhoto}>
-            <View style={styles.photoContainer}>
-              <Text style={styles.addPhotoText}>Add Photo</Text>
-            </View>
+    <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <View style={styles.page}>
+        <Header title="Sign Up" subTitle="Register and eat" onBack={() => {}} />
+        <View style={styles.container}>
+          <View style={styles.photo}>
+            <TouchableOpacity>
+              <View style={styles.borderPhoto}>
+                <View style={styles.photoContainer}>
+                  <Text style={styles.addPhotoText}>Add Photo</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
           </View>
+          <TextInput
+            label="Full Name"
+            placeholder="Type your full Name"
+            value={form.name}
+            onChangeText={(value) => setForm('name', value)}
+          />
+          <Gap height={16} />
+          <TextInput
+            label="Email Address"
+            placeholder="Type your email address"
+            value={form.email}
+            onChangeText={(value) => setForm('email', value)}
+          />
+          <Gap height={16} />
+          <TextInput
+            label="Password"
+            placeholder="Type your password"
+            secureTextEntry
+            value={form.password}
+            onChangeText={(value) => setForm('password', value)}
+          />
+          <Gap height={24} />
+          <Button text="Continue" onPress={onSubmit} />
         </View>
-        <TextInput label="Full Name" placeholder="Type your full Name" />
-        <Gap height={16} />
-        <TextInput
-          label="Email Address"
-          placeholder="Type your email address"
-        />
-        <Gap height={16} />
-        <TextInput label="Password" placeholder="Type your password" />
-        <Gap height={24} />
-        <Button
-          text="Continue"
-          onPress={() => navigation.navigate('SignUpAddress')}
-        />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
