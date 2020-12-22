@@ -3,8 +3,7 @@ import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Header, TextInput, Gap, Button, Select} from '../../component';
-import {useForm} from '../../utils';
-import {showMessage, hideMessage} from 'react-native-flash-message';
+import {useForm, showMessage} from '../../utils';
 
 const SignUpAddress = ({navigation}) => {
   const [form, setForm] = useForm({
@@ -15,7 +14,7 @@ const SignUpAddress = ({navigation}) => {
   });
 
   const dispatch = useDispatch();
-  const registerReducer = useSelector((state) => state.registerReducer);
+  const {registerReducer, photoReducer} = useSelector((state) => state);
 
   const onSubmit = () => {
     console.log('form: ', form);
@@ -28,22 +27,31 @@ const SignUpAddress = ({navigation}) => {
     Axios.post('http://10.0.2.2:8000/api/register', data)
       .then((res) => {
         console.log('data success: ', res.data);
+        if (photoReducer.isUploadPhoto) {
+          const photoForUpload = new FormData();
+          photoForUpload.append('file', photoReducer);
+          Axios.post('http://10.0.2.2:8000/api/user/photo', photoForUpload, {
+            headers: {
+              Authorization: `${res.data.data.token_type} ${res.data.data.access_token}`,
+              'content-Type': 'multipart/form-data',
+            },
+          })
+            .then((resUpload) => {
+              console.log('success upload: ', resUpload);
+            })
+            .catch((err) => {
+              showMessage('Upload Photo tidak berhasil', err);
+            });
+        }
+
         dispatch({type: 'SET_LOADING', value: false});
-        showToast('Register Success', 'success');
+        showMessage('Register Success', 'success');
         navigation.replace('SuccessSignUp');
       })
       .catch((err) => {
         dispatch({type: 'SET_LOADING', value: false});
-        showToast(err?.response?.data?.data?.message);
+        showMessage(err?.response?.data?.data?.message);
       });
-  };
-
-  const showToast = (message, type) => {
-    showMessage({
-      message,
-      type: type === 'success' ? 'success' : 'danger',
-      backgroundColor: type === 'success' ? '#1abc9c' : '#d9435e',
-    });
   };
 
   return (

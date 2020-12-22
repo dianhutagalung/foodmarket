@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -8,18 +9,8 @@ import {
 } from 'react-native';
 import {Header, TextInput, Gap, Button} from '../../component';
 import {useSelector, useDispatch} from 'react-redux';
-import {useForm} from '../../utils';
-// import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-
-// const addPhoto = () => {
-//   launchImageLibrary({}, (response) => {
-//     if (response.didCancel || response.errorMessage) {
-//       console.log('Anda tidak memilih photo');
-//     } else {
-//       console.log('Anda tidak memilih photo');
-//     }
-//   });
-// };
+import {showMessage, useForm} from '../../utils';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const SignUp = ({navigation}) => {
   const [form, setForm] = useForm({
@@ -27,6 +18,34 @@ const SignUp = ({navigation}) => {
     email: '',
     password: '',
   });
+  const [photo, setPhoto] = useState('');
+
+  const addPhoto = () => {
+    launchImageLibrary(
+      {
+        quality: 0.5,
+        maxWidth: 200,
+        maxHeight: 200,
+      },
+      (response) => {
+        if (response.didCancel || response.errorMessage) {
+          showMessage('Anda tidak memilih photo');
+        } else {
+          const source = {uri: response.uri};
+          console.log(source);
+          const dataImage = {
+            uri: response.uri,
+            type: response.type,
+            name: response.fileName,
+          };
+
+          setPhoto(source);
+          dispatch({type: 'SET_PHOTO', value: dataImage});
+          dispatch({type: 'SET_UPLOAD_STATUS', value: true});
+        }
+      },
+    );
+  };
 
   const dispatch = useDispatch();
 
@@ -42,11 +61,15 @@ const SignUp = ({navigation}) => {
         <Header title="Sign Up" subTitle="Register and eat" onBack={() => {}} />
         <View style={styles.container}>
           <View style={styles.photo}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={addPhoto}>
               <View style={styles.borderPhoto}>
-                <View style={styles.photoContainer}>
-                  <Text style={styles.addPhotoText}>Add Photo</Text>
-                </View>
+                {photo ? (
+                  <Image source={photo} style={styles.photoContainer} />
+                ) : (
+                  <View style={styles.photoContainer}>
+                    <Text style={styles.addPhotoText}>Add Photo</Text>
+                  </View>
+                )}
               </View>
             </TouchableOpacity>
           </View>
