@@ -7,7 +7,7 @@ const HeaderProfile = () => {
   const [photo, setPhoto] = useState(ProfileDummy);
   useEffect(() => {
     getData('userProfile').then((res) => {
-      setPhoto({uri: res.profile_photo_url});
+      setPhoto({uri: `${res.profile_photo_url}`});
     });
   }, []);
   return (
@@ -16,9 +16,7 @@ const HeaderProfile = () => {
         <Text style={styles.title}>FoodMarket</Text>
         <Text style={styles.subtitle}>Let's get some foods</Text>
       </View>
-      <View style={styles.profile}>
-        <Image source={photo} />
-      </View>
+      <Image source={photo} style={styles.profile} resizeMode={'cover'} />
     </View>
   );
 };

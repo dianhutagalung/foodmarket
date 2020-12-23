@@ -1,26 +1,20 @@
-import Axios from 'axios';
-import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {useDispatch} from 'react-redux';
 import {Button, Gap, Header, TextInput} from '../../component';
-import {useForm} from '../../utils';
+import {signInAction} from '../../redux/action/auth';
+import {getData, useForm} from '../../utils';
 
 const SignIn = ({navigation}) => {
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
   const [form, setForm] = useForm({
     email: '',
     password: '',
   });
 
+  const dispatch = useDispatch();
+
   const onSubmit = () => {
-    console.log('form : ', form);
-    Axios.post('http://10.0.2.2:8000/api/login', form)
-      .then((res) => {
-        console.log('success', res);
-      })
-      .catch((err) => {
-        console.log('error', err);
-      });
+    dispatch(signInAction(form, navigation));
   };
   return (
     <View style={styles.page}>

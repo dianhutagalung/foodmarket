@@ -2,9 +2,9 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {IcRight} from '../../../assets';
 
-const ItemListMenu = ({label}) => {
+const ItemListMenu = ({label, onPress}) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
         <Text style={styles.label}>{label}</Text>
         <IcRight />

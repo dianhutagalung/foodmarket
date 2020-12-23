@@ -3,13 +3,20 @@ import {StyleSheet, Text, View} from 'react-native';
 import {IcStarOff, IcStarOn} from '../../../assets';
 
 const Rating = ({rating}) => {
+  const renderStar = () => {
+    let star = [];
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating) {
+        star.push(<IcStarOn />);
+      } else {
+        star.push(<IcStarOff />);
+      }
+    }
+    return star;
+  };
   return (
     <View style={styles.rating}>
-      <IcStarOn />
-      <IcStarOn />
-      <IcStarOn />
-      <IcStarOn />
-      <IcStarOff />
+      {renderStar()}
       <Text style={styles.textRating}>{rating}</Text>
     </View>
   );
@@ -25,5 +32,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
     color: '#8D92A3',
+    marginLeft: 4,
   },
 });

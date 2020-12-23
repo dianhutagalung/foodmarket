@@ -1,9 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text, View, Dimensions, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, Dimensions} from 'react-native';
 import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
-import {ItemListFood, ItemListMenu} from '..';
-import {FoodDummy7} from '../../../assets';
+import {ItemListMenu} from '..';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const renderTabBar = (props) => (
   <TabBar
@@ -37,12 +37,18 @@ const renderTabBar = (props) => (
 
 const Account = () => {
   const navigation = useNavigation();
+  const signOut = () => {
+    AsyncStorage.multiRemove(['userProfile', 'token']).then(() => {
+      navigation.reset({index: 0, routes: [{name: 'SignIn'}]});
+    });
+  };
   return (
     <View style={styles.container}>
       <ItemListMenu label="Edit Profile" />
       <ItemListMenu label="Home Address" />
       <ItemListMenu label="Security" />
       <ItemListMenu label="Payments" />
+      <ItemListMenu label="SignOut" onPress={signOut} />
     </View>
   );
 };
