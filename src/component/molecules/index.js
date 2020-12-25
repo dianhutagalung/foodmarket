@@ -12,6 +12,7 @@ import Counter from './Counter';
 import ItemValue from './ItemValue';
 import EmptyOrder from './EmptyOrder';
 import Loading from './Loading';
+import Number from './Number';
 
 export {
   Header,
@@ -28,4 +29,5 @@ export {
   OrderTabSection,
   ProfileTabSection,
   Loading,
+  Number,
 };

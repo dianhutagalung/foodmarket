@@ -1,14 +1,28 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-const Counter = () => {
+const Counter = ({onValueChange}) => {
+  const [value, setValue] = useState(1);
+  const onCount = (type) => {
+    let result = value;
+    if (type === 'plus') {
+      result = value + 1;
+    }
+    if (type === 'minus') {
+      if (value > 1) {
+        result = value - 1;
+      }
+    }
+    setValue(result);
+    onValueChange(result);
+  };
   return (
     <View style={styles.counter}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => onCount('minus')}>
         <Text style={styles.OperatorCounter}>-</Text>
       </TouchableOpacity>
-      <Text style={styles.textCounter}>14</Text>
-      <TouchableOpacity>
+      <Text style={styles.textCounter}>{value}</Text>
+      <TouchableOpacity onPress={() => onCount('plus')}>
         <Text style={styles.OperatorCounter}>+</Text>
       </TouchableOpacity>
     </View>

@@ -1,9 +1,9 @@
 import React from 'react';
 import {StyleSheet, Text, View, Dimensions} from 'react-native';
 import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
-import {ItemListMenu} from '..';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ItemListMenu from '../ItemListMenu';
 
 const renderTabBar = (props) => (
   <TabBar

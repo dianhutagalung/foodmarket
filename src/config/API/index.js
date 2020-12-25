@@ -1,4 +1,4 @@
 export const API_HOST = {
-  url: 'http://10.0.2.2:8000/api',
-  urlPhoto: 'http://10.0.2.2:8000/storage/',
+  url: ' https://c25ef0bf3dbd.ap.ngrok.io/api',
+  urlPhoto: ' https://c25ef0bf3dbd.ap.ngrok.io/storage/',
 };

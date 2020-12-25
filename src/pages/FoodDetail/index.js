@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ImageBackground,
   StyleSheet,
@@ -6,14 +6,63 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {FoodDummy1, IcBackWhite} from '../../assets';
-import {Button, Counter, Gap, Rating} from '../../component';
+import {IcBackWhite} from '../../assets';
+import {Button, Counter, Gap, Number, Rating} from '../../component';
+import {getData} from '../../utils';
 
-const FoodDetail = ({navigation}) => {
+const FoodDetail = ({navigation, route}) => {
+  const {
+    id,
+    name,
+    description,
+    ingredients,
+    price,
+    rate,
+    picturePath,
+  } = route.params;
+
+  const [totalItem, setTotalItem] = useState(1);
+  const [userProfile, setUserProfile] = useState({});
+
+  useEffect(() => {
+    getData('userProfile').then((res) => {
+      setUserProfile(res);
+    });
+  }, []);
+
+  const onCounterChange = (value) => {
+    setTotalItem(value);
+  };
+
+  const onOrder = () => {
+    const totalPrice = totalItem * price;
+    const driver = 500;
+    const tax = (10 / 100) * totalPrice;
+    const data = {
+      item: {
+        id,
+        name,
+        price,
+        picturePath,
+      },
+      transaction: {
+        totalItem,
+        totalPrice,
+        driver,
+        tax,
+        total: totalPrice + driver + tax,
+      },
+      userProfile,
+    };
+    navigation.navigate('OrderSummary', data);
+  };
+
   return (
     <View style={styles.page}>
-      <ImageBackground source={FoodDummy1} style={styles.imageCover}>
-        <TouchableOpacity style={styles.back}>
+      <ImageBackground source={{uri: picturePath}} style={styles.imageCover}>
+        <TouchableOpacity
+          style={styles.back}
+          onPress={() => navigation.goBack()}>
           <IcBackWhite />
         </TouchableOpacity>
       </ImageBackground>
@@ -22,35 +71,26 @@ const FoodDetail = ({navigation}) => {
         <View style={styles.detailCover}>
           <View style={styles.header}>
             <View>
-              <Text style={styles.titleHeader}>Cherry Healthy</Text>
-              <Rating rating="4.2" />
+              <Text style={styles.titleHeader}>{name}</Text>
+              <Rating rating={rate} />
             </View>
-            <Counter />
+            <Counter onValueChange={onCounterChange} />
           </View>
           <Gap height={12} />
-          <Text style={styles.textDesc}>
-            Makanan khas Bandung yang cukup sering dipesan oleh anak muda dengan
-            pola makan yang cukup tinggi dengan mengutamakan diet yang sehat dan
-            teratur.
-          </Text>
+          <Text style={styles.textDesc}>{description}</Text>
           <Gap height={12} />
           <Text style={styles.textIngredients}>Ingredients:</Text>
-          <Text style={styles.textIngredientsSub}>
-            Seledri, telur, blueberry, madu.
-          </Text>
+          <Text style={styles.textIngredientsSub}>{ingredients}</Text>
         </View>
       </View>
 
       <View style={styles.price}>
         <View>
           <Text style={styles.totalPrice}>Total Price</Text>
-          <Text style={styles.textPrice}>IDR 12.289.000</Text>
+          <Number number={totalItem * price} style={styles.textPrice} />
         </View>
         <View style={styles.button}>
-          <Button
-            text="Order Now"
-            onPress={() => navigation.navigate('OrderSummary')}
-          />
+          <Button text="Order Now" onPress={onOrder} />
         </View>
       </View>
     </View>

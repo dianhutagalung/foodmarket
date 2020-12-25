@@ -1,9 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text, View, Dimensions, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, Dimensions} from 'react-native';
 import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
-import {ItemListFood} from '..';
 import {FoodDummy7} from '../../../assets';
 import {useNavigation} from '@react-navigation/native';
+import ItemListFood from '../ItemListFood';
 
 const renderTabBar = (props) => (
   <TabBar

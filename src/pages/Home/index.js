@@ -1,11 +1,10 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {FoodDummy1, FoodDummy2, FoodDummy3} from '../../assets';
 import {FoodCard, HeaderProfile, HomeTabSection} from '../../component';
 import {getFoodData} from '../../redux/action';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const {food} = useSelector((state) => state.homeReducer);
   useEffect(() => {
@@ -19,12 +18,13 @@ const Home = () => {
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.foodCardContainer}>
               {food.map((itemFood) => {
-                console.log('foodcard: ', itemFood);
                 return (
                   <FoodCard
+                    key={itemFood.id}
                     name={itemFood.name}
                     image={{uri: itemFood.picturePath}}
                     rating={itemFood.rate}
+                    onPress={() => navigation.navigate('FoodDetail', itemFood)}
                   />
                 );
               })}

@@ -1,11 +1,21 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import Number from '../Number';
 
-const ItemValue = ({label, value, totalPrice}) => {
+const ItemValue = ({label, value, totalPrice, type}) => {
   return (
     <View style={styles.detailContainer}>
       <Text style={styles.label}>{label}</Text>
-      <Text style={totalPrice ? styles.totalPrice : styles.value}>{value}</Text>
+      {type === 'currency' ? (
+        <Number
+          number={value}
+          style={totalPrice ? styles.totalPrice : styles.value}
+        />
+      ) : (
+        <Text style={totalPrice ? styles.totalPrice : styles.value}>
+          {value}
+        </Text>
+      )}
     </View>
   );
 };

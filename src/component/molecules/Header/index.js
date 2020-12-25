@@ -2,11 +2,11 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {IcBack} from '../../../assets';
 
-const Header = ({title, subTitle, onBack}) => {
+const Header = ({title, subTitle, onBack, onPress}) => {
   return (
     <View style={styles.container}>
       {onBack && (
-        <TouchableOpacity activeOpacity={0.7} onPress={onBack}>
+        <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
           <View style={styles.back}>
             <IcBack />
           </View>
