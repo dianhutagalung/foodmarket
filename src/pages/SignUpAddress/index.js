@@ -1,10 +1,9 @@
-import Axios from 'axios';
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Header, TextInput, Gap, Button, Select} from '../../component';
 import {setLoading, signUpAction} from '../../redux/action';
-import {useForm, showMessage} from '../../utils';
+import {useForm} from '../../utils';
 
 const SignUpAddress = ({navigation}) => {
   const [form, setForm] = useForm({
@@ -18,12 +17,10 @@ const SignUpAddress = ({navigation}) => {
   const {registerReducer, photoReducer} = useSelector((state) => state);
 
   const onSubmit = () => {
-    console.log('form: ', form);
     const data = {
       ...form,
       ...registerReducer,
     };
-    console.log('data Register: ', data);
     dispatch(setLoading(true));
     dispatch(signUpAction(data, photoReducer, navigation));
   };

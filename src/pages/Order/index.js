@@ -1,13 +1,20 @@
-import {TabRouter} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {EmptyOrder, Header, OrderTabSection} from '../../component';
+import {getOrders} from '../../redux/action';
 
 const Order = () => {
-  const [isEmpty] = useState(false);
+  const dispatch = useDispatch();
+  const {orders} = useSelector((state) => state.orderReducer);
+
+  useEffect(() => {
+    dispatch(getOrders());
+  }, []);
+
   return (
     <View style={styles.page}>
-      {isEmpty ? (
+      {orders.length < 1 ? (
         <EmptyOrder />
       ) : (
         <View style={styles.container}>

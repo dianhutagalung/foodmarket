@@ -52,25 +52,30 @@ const ItemListFood = ({
           <>
             <View style={styles.text}>
               <Text style={styles.title}>{name}</Text>
-              <Text style={styles.price}>
-                {items} items . IDR {price}
-              </Text>
+              <View style={styles.row}>
+                <Text style={styles.price}>{items} items</Text>
+                <View style={styles.dot} />
+                <Number number={price} style={styles.price} />
+              </View>
             </View>
           </>
         );
       case 'past-orders':
         // item past orders:
+        const formatedDate = new Date(date).toDateString();
         return (
           <>
             <View style={styles.text}>
               <Text style={styles.title}>{name}</Text>
-              <Text style={styles.price}>
-                {items} items . IDR {price}
-              </Text>
+              <View style={styles.row}>
+                <Text style={styles.price}>{items} items</Text>
+                <View style={styles.dot} />
+                <Number number={price} style={styles.price} />
+              </View>
             </View>
             <View>
-              <Text style={styles.date}>{date}</Text>
-              <Text style={styles.status}>{status}</Text>
+              <Text style={styles.date}>{formatedDate}</Text>
+              <Text style={styles.status(status)}>{status}</Text>
             </View>
           </>
         );
@@ -132,9 +137,20 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#8D92A3',
   },
-  status: {
+  status: (status) => ({
     fontFamily: 'Poppins-Regular',
     fontSize: 10,
-    color: '#D9435E',
+    color: status === 'CANCELLED' ? '#D9435E' : '#1ABC9C',
+  }),
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dot: {
+    width: 3,
+    height: 3,
+    borderRadius: 3,
+    marginHorizontal: 5,
+    backgroundColor: '#8D92A3',
   },
 });

@@ -23,7 +23,7 @@ export const signUpAction = (dataRegister, photoReducer, navigation) => (
           },
         })
           .then((resUpload) => {
-            profile.profile_photo_url = `${API_HOST.urlPhoto}${resUpload.data.data[0]}/`;
+            profile.profile_photo_url = `http://10.0.2.2:8000/storage/${resUpload.data.data[0]}`;
             storeData('userProfile', profile);
             navigation.reset({index: 0, routes: [{name: 'SuccessSignUp'}]});
           })
@@ -39,7 +39,10 @@ export const signUpAction = (dataRegister, photoReducer, navigation) => (
     })
     .catch((err) => {
       dispatch(setLoading(false));
-      showMessage(err?.response?.data?.data?.message);
+      console.log('err', err.response);
+      showMessage(
+        err?.response?.data?.data?.message || 'Gagal terhubung ke server',
+      );
     });
 };
 
@@ -49,15 +52,16 @@ export const signInAction = (dataLogin, navigation) => (dispatch) => {
     .then((res) => {
       const profile = res.data.data.user;
       const token = `${res.data.data.token_type} ${res.data.data.access_token}`;
-      profile.profile_photo_url = `${API_HOST.urlPhoto}${res.data.data.user.profile_photo_path}`;
+      profile.profile_photo_url = `${res.data.data.user.profile_photo_url}`;
       dispatch(setLoading(false));
       storeData('token', {value: token});
       storeData('userProfile', profile);
-      console.log('userpro_file: ', profile);
       navigation.reset({index: 0, routes: [{name: 'MainApp'}]});
     })
     .catch((err) => {
       dispatch(setLoading(false));
-      showMessage(err?.response?.data?.data?.message);
+      showMessage(
+        err?.response?.data?.data?.message || 'Gagal terhubung ke server',
+      );
     });
 };

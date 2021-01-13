@@ -1,22 +1,21 @@
 import Axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {Button, Header, ItemListFood, ItemValue, Loading} from '../../component';
+import {
+  Button,
+  Header,
+  ItemListFood,
+  ItemValue,
+  Loading,
+} from '../../component';
 import {API_HOST} from '../../config';
-import {getData} from '../../utils';
+import {getData, showMessage} from '../../utils';
 import {WebView} from 'react-native-webview';
 
 const OrderSummary = ({navigation, route}) => {
   const {item, transaction, userProfile} = route.params;
-  const [token, setToken] = useState('');
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [paymentURL, setPaymentURL] = useState('http://google.com');
-
-  useEffect(() => {
-    getData('token').then((res) => {
-      setToken(res.value);
-    });
-  }, []);
 
   const onCheckout = () => {
     const data = {
@@ -24,33 +23,33 @@ const OrderSummary = ({navigation, route}) => {
       user_id: userProfile.id,
       quantity: transaction.totalItem,
       total: transaction.total,
-      status: 'PENDING'
+      status: 'PENDING',
     };
 
-    Axios.post(`${API_HOST.url}/checkout`, data, {
-      headers: {
-        'Authorization': token
-      },
-    })
-      .then((res) => {
-        console.log('checkout success: ', res.data);
-        setIsPaymentOpen(true);
-        setPaymentURL(res.data.data.payment_url);
+    getData('token').then((resToken) => {
+      Axios.post(`${API_HOST.url}/checkout`, data, {
+        headers: {
+          Authorization: resToken.value,
+        },
       })
-      .catch((err) => {
-        console.log('errGetdata: ', err);
-      });
-
-    
+        .then((res) => {
+          setIsPaymentOpen(true);
+          setPaymentURL(res.data.data.payment_url);
+        })
+        .catch((err) => {
+          showMessage(err?.response?.message || 'terjadi kesalahan');
+        });
+    });
   };
 
   // melihat perubahan url midtrans
-  const onNavChange = (state) =>{
-    console.log('nav: ', state)
-    const urlSuccess = "http://example.com/?order_id=31&status_code=201&transaction_status=pending";
-    const titleWeb = "Example Domain";
-    if(state.title === titleWeb){
-      navigation.replace('OrderSuccess');
+  const onNavChange = (state) => {
+    console.log(state);
+    const urlSuccess =
+      'http://example.com/?order_id=31&status_code=201&transaction_status=pending';
+    const titleWeb = 'Laravel';
+    if (state.title === titleWeb) {
+      navigation.reset({index: 0, routes: [{name: 'OrderSuccess'}]});
     }
   };
 
@@ -64,10 +63,10 @@ const OrderSummary = ({navigation, route}) => {
           onBack
         />
         <WebView
-          source={{uri: paymentURL}} 
+          source={{uri: paymentURL}}
           startInLoadingState={true}
           renderLoading={() => <Loading />}
-          onNavigationStateChange={onNavChange }
+          onNavigationStateChange={onNavChange}
         />
       </>
     );

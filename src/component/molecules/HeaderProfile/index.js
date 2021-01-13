@@ -1,22 +1,32 @@
 import React, {useEffect, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {StyleSheet, Text, View, Image} from 'react-native';
 import {ProfileDummy} from '../../../assets';
 import {getData} from '../../../utils/storage';
 
 const HeaderProfile = () => {
+  const navigation = useNavigation();
   const [photo, setPhoto] = useState(ProfileDummy);
   useEffect(() => {
-    getData('userProfile').then((res) => {
-      setPhoto({uri: `${res.profile_photo_url}`});
+    navigation.addListener('focus', () => {
+      getData('userProfile').then((res) => {
+        setPhoto(res.profile_photo_url);
+      });
     });
-  }, []);
+  }, [navigation]);
   return (
     <View style={styles.container}>
       <View style={styles.text}>
         <Text style={styles.title}>FoodMarket</Text>
         <Text style={styles.subtitle}>Let's get some foods</Text>
       </View>
-      <Image source={photo} style={styles.profile} resizeMode={'cover'} />
+      <Image
+        source={{
+          uri: `${photo}`,
+        }}
+        style={styles.profile}
+        resizeMode={'cover'}
+      />
     </View>
   );
 };

@@ -8,9 +8,9 @@ import {
   View,
 } from 'react-native';
 import {Header, TextInput, Gap, Button} from '../../component';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {showMessage, useForm} from '../../utils';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const SignUp = ({navigation}) => {
   const [form, setForm] = useForm({
@@ -32,7 +32,6 @@ const SignUp = ({navigation}) => {
           showMessage('Anda tidak memilih photo');
         } else {
           const source = {uri: response.uri};
-          console.log(source);
           const dataImage = {
             uri: response.uri,
             type: response.type,
@@ -50,7 +49,6 @@ const SignUp = ({navigation}) => {
   const dispatch = useDispatch();
 
   const onSubmit = () => {
-    console.log('form: ', form);
     dispatch({type: 'SET_REGISTER', value: form});
     navigation.navigate('SignUpAddress');
   };

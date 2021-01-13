@@ -1,9 +1,17 @@
-import React from 'react';
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
-import {FoodDummy7} from '../../../assets';
 import {useNavigation} from '@react-navigation/native';
 import ItemListFood from '../ItemListFood';
+import {useDispatch, useSelector} from 'react-redux';
+import {getInProgress, getPastOrders} from '../../../redux/action';
 
 const renderTabBar = (props) => (
   <TabBar
@@ -37,53 +45,85 @@ const renderTabBar = (props) => (
 
 const InProgress = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const {inProgress} = useSelector((state) => state.orderReducer);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    dispatch(getInProgress());
+  }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    dispatch(getInProgress());
+    setRefreshing(false);
+  };
+
   return (
-    <View style={styles.container}>
-      <ItemListFood
-        name="Soup Bumil"
-        image={FoodDummy7}
-        items={4}
-        price={289.123}
-        type="in-progress"
-        onPress={() => navigation.navigate('OrderDetail')}
-      />
-      <ItemListFood
-        name="Soup Bumil"
-        image={FoodDummy7}
-        items={4}
-        price={289.123}
-        type="in-progress"
-        onPress={() => navigation.navigate('OrderDetail')}
-      />
-    </View>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
+      <View style={styles.container}>
+        {console.log('inProgress: ', inProgress)}
+        {inProgress.map((order) => {
+          return (
+            <ItemListFood
+              key={order.id}
+              name={order.food.name}
+              image={{uri: order.food.picturePath}}
+              items={order.quantity}
+              price={order.total}
+              type="in-progress"
+              onPress={() => navigation.navigate('OrderDetail', order)}
+            />
+          );
+        })}
+      </View>
+    </ScrollView>
   );
 };
 
 const PastOrders = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const {pastOrders} = useSelector((state) => state.orderReducer);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    dispatch(getPastOrders());
+  }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    dispatch(getPastOrders());
+    setRefreshing(false);
+  };
+
   return (
-    <View style={styles.container}>
-      <ItemListFood
-        name="Soup Bumil"
-        image={FoodDummy7}
-        items={4}
-        price={289.123}
-        type="past-orders"
-        date="Jun 12, 14:00"
-        // s
-        onPress={() => navigation.navigate('OrderDetail')}
-      />
-      <ItemListFood
-        name="Soup Bumil"
-        image={FoodDummy7}
-        items={4}
-        price={289.123}
-        type="past-orders"
-        date="Jun 12, 14:00"
-        status="canceled"
-        onPress={() => navigation.navigate('OrderDetail')}
-      />
-    </View>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
+      <View style={styles.container}>
+        {console.log('pastOrders: ', pastOrders)}
+        {pastOrders.map((order) => {
+          return (
+            <ItemListFood
+              key={order.id}
+              name={order.food.name}
+              image={{uri: order.food.picturePath}}
+              items={order.quantity}
+              price={order.total}
+              type="past-orders"
+              date={order.created_at}
+              status={order.status}
+              onPress={() => navigation.navigate('OrderDetail', order)}
+            />
+          );
+        })}
+      </View>
+    </ScrollView>
   );
 };
 const initialLayout = {width: Dimensions.get('window').width};

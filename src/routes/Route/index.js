@@ -14,6 +14,7 @@ import {
   OrderSummary,
   OrderSuccess,
   OrderDetail,
+  EditProfile,
 } from '../../pages';
 import {BottomNavigator} from '../../component';
 
@@ -81,6 +82,11 @@ const Route = () => {
       <Stack.Screen
         name="OrderDetail"
         component={OrderDetail}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

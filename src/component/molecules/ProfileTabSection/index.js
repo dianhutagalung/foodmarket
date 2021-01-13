@@ -44,7 +44,7 @@ const Account = () => {
   };
   return (
     <View style={styles.container}>
-      <ItemListMenu label="Edit Profile" />
+      <ItemListMenu label="Edit Profile" onPress={()=> navigation.navigate('EditProfile')} />
       <ItemListMenu label="Home Address" />
       <ItemListMenu label="Security" />
       <ItemListMenu label="Payments" />

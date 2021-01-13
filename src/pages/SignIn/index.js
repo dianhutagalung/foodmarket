@@ -1,9 +1,10 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {Button, Gap, Header, TextInput} from '../../component';
+import {setLoading} from '../../redux/action';
 import {signInAction} from '../../redux/action/auth';
-import {getData, useForm} from '../../utils';
+import {useForm} from '../../utils';
 
 const SignIn = ({navigation}) => {
   const [form, setForm] = useForm({
@@ -14,6 +15,7 @@ const SignIn = ({navigation}) => {
   const dispatch = useDispatch();
 
   const onSubmit = () => {
+    dispatch(setLoading(true));
     dispatch(signInAction(form, navigation));
   };
   return (
